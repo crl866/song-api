@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Song {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,6 +18,9 @@ public class Song {
     private String genre;
     private String url;
 
+    // Required by JPA and used by JSON deserialization (Jackson)
+    public Song() {
+    }
 
     public Long getId() {
         return id;
@@ -30,8 +34,8 @@ public class Song {
         return title;
     }
 
-    public void setTitle(String brand) {
-        this.title = brand;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getArtist() {
