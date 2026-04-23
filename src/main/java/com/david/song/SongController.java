@@ -3,11 +3,13 @@ package com.david.song;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin; // <-- add
 
 import java.util.Collections;
 import java.util.Optional;
 
-@RestController   // Simplified: no need for @ResponseBody everywhere
+@CrossOrigin(origins = "https://song-ui-igm7.onrender.com") // <-- add
+@RestController
 @RequestMapping(path="/david")
 public class SongController {
     @Autowired
@@ -16,7 +18,6 @@ public class SongController {
     @PostMapping(path="/songs")
     public ResponseEntity<?> addSong(@RequestBody Song song) {
         Song savedSong = songRepository.save(song);
-        // Return 200 OK instead of 201 Created (to match Postman test expectation)
         return ResponseEntity.ok(savedSong);
     }
 
@@ -56,7 +57,6 @@ public class SongController {
         Optional<Song> song = songRepository.findById(id);
         if (song.isPresent()) {
             songRepository.deleteById(id);
-            // Match exactly what Postman test expects (period at the end)
             return ResponseEntity.ok("Song with ID " + id + " deleted.");
         } else {
             return ResponseEntity.badRequest().body("Song with ID " + id + " not found");
@@ -74,7 +74,6 @@ public class SongController {
                 .findByTitleContainingIgnoreCaseOrArtistContainingIgnoreCaseOrAlbumContainingIgnoreCaseOrGenreContainingIgnoreCase(
                         key, key, key, key);
         if (!results.iterator().hasNext()) {
-            // Return [] instead of {} to match Postman test expectation
             return ResponseEntity.ok(Collections.emptyList());
         }
         return ResponseEntity.ok(results);
